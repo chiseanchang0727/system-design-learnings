@@ -1,0 +1,286 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sectionDesc {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sectionDesc strong {
+  color: var(--accent-hover);
+}
+
+/* --- layout --- */
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* --- cache panel --- */
+.cachePanel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cacheHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--border);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mruLabel {
+  color: var(--success);
+}
+
+.cacheSlots {
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.slot:last-child {
+  border-bottom: none;
+}
+
+.slotMRU {
+  background: rgba(99, 102, 241, 0.06);
+}
+
+.slotHit {
+  background: rgba(34, 197, 94, 0.12) !important;
+  animation: pulse 0.6s ease;
+}
+
+.slotEvict {
+  background: rgba(239, 68, 68, 0.15) !important;
+  animation: fadeout 1.2s ease forwards;
+}
+
+@keyframes pulse {
+  0% { background: rgba(34, 197, 94, 0.35); }
+  100% { background: rgba(34, 197, 94, 0.12); }
+}
+
+@keyframes fadeout {
+  0% { opacity: 1; }
+  80% { opacity: 0.3; }
+  100% { opacity: 0; }
+}
+
+.slotRank {
+  width: 18px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.slotKey {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-hover);
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.slotArrow {
+  color: var(--text-muted);
+}
+
+.slotVal {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text);
+  flex: 1;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--accent-hover);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgeLRU {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+.fillBar {
+  height: 3px;
+  background: var(--border);
+}
+
+.fillBarInner {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+/* --- controls --- */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.controlCard, .logCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controlTitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.inputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: var(--accent);
+}
+
+.btn {
+  padding: 7px 16px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--accent-hover);
+}
+
+.logEmpty {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.logEntry {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.logEntry:last-child {
+  border-bottom: none;
+}
+
+.logNew {
+  color: var(--text);
+}
+
+/* --- concept grid --- */
+.conceptGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.conceptCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.conceptCard h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-hover);
+  margin-bottom: 6px;
+}
+
+.conceptCard p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* --- code block --- */
+.code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text);
+}

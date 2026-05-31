@@ -1,0 +1,88 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.brandIcon {
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.brandName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.navList {
+  list-style: none;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navSection {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  padding: 12px 12px 4px;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+}
+
+.navLink:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.navLink.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-hover);
+}
+
+.topicIcon {
+  font-size: 15px;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 40px;
+  max-width: 1100px;
+}
