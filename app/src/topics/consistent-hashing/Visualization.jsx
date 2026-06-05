@@ -78,9 +78,9 @@ function angleToXY(angle, r = R) {
 
 // ─── constants ────────────────────────────────────────────────────────────────
 const NODE_COLORS = ['#6366f1', '#22c55e', '#f59e0b', '#ec4899', '#14b8a6', '#f97316']
-const NODE_NAMES  = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot']
-const DEFAULT_NODES = ['alpha', 'bravo', 'charlie']
-const DEFAULT_KEYS  = ['session:user_42', 'session:user_99', 'product:789', 'order:001', 'cart:user_7', 'invoice:334', 'profile:user_18']
+const NODE_NAMES  = ['nairobi', 'london', 'lagos', 'ny', 'tokyo', 'mumbai']
+const DEFAULT_NODES = ['nairobi', 'london', 'lagos']
+const DEFAULT_KEYS  = ['product:101', 'session:abc', 'user:1001', 'user:2091', 'cart:user1001', 'product:204', 'session:def']
 
 // ─── component ────────────────────────────────────────────────────────────────
 export default function ConsistentHashingViz() {
@@ -214,7 +214,6 @@ function HashRingTab() {
     setNodeList(newList)
     const changed = new Set(keys.filter(k => ring.getNode(k) !== before[k]))
     setRemapped(changed)
-    setTimeout(() => setRemapped(new Set()), 1500)
     rerender()
   }
 
@@ -312,7 +311,7 @@ function HashRingTab() {
             const [x, y] = angleToXY(angle)
             const color  = colorFor(node)
             const isAssigned = selectedKey && ring.getNode(selectedKey) === node
-            const label  = node.replace('cache-server-', 'S')
+            const label  = node.slice(0, 3).toUpperCase()
             const [lx, ly] = angleToXY(angle, R + 22)
             return (
               <g key={pos}>
@@ -324,7 +323,7 @@ function HashRingTab() {
                 <text x={x} y={y} textAnchor="middle" dominantBaseline="central"
                   fontSize="10" fontWeight="700" fill="#fff">{label}</text>
                 <text x={lx} y={ly} textAnchor="middle" dominantBaseline="central"
-                  fontSize="9" fill="var(--text-muted)">{node.replace('cache-server-', 'srv-')}</text>
+                  fontSize="9" fill="var(--text-muted)">{node}</text>
               </g>
             )
           })}
