@@ -1,0 +1,121 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.desc strong { color: var(--text); }
+
+/* ── controls ── */
+.controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.toggle {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.toggleBtn {
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+}
+
+.toggleBtn:hover { color: var(--text); }
+
+.toggleActive {
+  background: var(--accent);
+  color: #fff;
+}
+
+.sliderWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.sliderWrap strong { color: var(--text); }
+
+.slider {
+  width: 160px;
+  accent-color: var(--accent);
+}
+
+.muted { font-size: 11px; color: var(--text-muted); }
+
+/* ── stats ── */
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.statMatch  { color: var(--success); }
+.statFP     { color: var(--warning); }
+.statSkip   { color: var(--text-muted); }
+.statCells  { color: var(--accent-hover); }
+.sep        { color: var(--border); }
+
+/* ── svg ── */
+.svg {
+  width: 100%;
+  max-width: 520px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  display: block;
+}
+
+/* ── legend ── */
+.legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-muted);
+  align-items: center;
+}
+
+.dotMatch, .dotFP, .dotSkip {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.dotMatch { background: #22c55e; }
+.dotFP    { background: #f59e0b; }
+.dotSkip  { background: #334155; border: 1px solid rgba(255,255,255,0.15); }
+
+/* ── insight ── */
+.insight {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+}
