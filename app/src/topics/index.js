@@ -1,5 +1,6 @@
 import CachingViz from './caching/Visualization.jsx'
 import ConsistentHashingViz from './consistent-hashing/Visualization.jsx'
+import RedisViz from './redis/Visualization.jsx'
 import BTreeViz from './b-tree/Visualization.jsx'
 import CompositeIndexViz from './composite-index/Visualization.jsx'
 import LSMTreeViz from './lsm-tree/Visualization.jsx'
@@ -15,6 +16,13 @@ export const topicGroups = [
         icon: '⚡',
         description: 'LRU, LFU, write-through, write-back, eviction policies',
         component: CachingViz,
+      },
+      {
+        slug: 'redis',
+        title: 'Redis',
+        icon: '🔴',
+        description: 'Strings, Hashes, Lists, Sets, Sorted Sets, TTL — the data types behind every Redis use case',
+        component: RedisViz,
       },
       {
         slug: 'consistent-hashing',

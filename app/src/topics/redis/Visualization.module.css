@@ -1,0 +1,472 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sectionDesc {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* --- tabs --- */
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.tab:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.tabActive {
+  background: var(--bg);
+}
+
+.tabCmd {
+  font-size: 10px;
+  font-weight: 400;
+  font-family: 'JetBrains Mono', monospace;
+  opacity: 0.75;
+}
+
+/* --- type description bar --- */
+.typeDesc {
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  background: var(--surface);
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* --- layout --- */
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* --- store panel --- */
+.storePanel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.storeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--border);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.typeTag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.storeSlots {
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+  padding: 32px 0;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.slot:last-child {
+  border-bottom: none;
+}
+
+.slotGroup {
+  border-bottom: 1px solid var(--border);
+}
+
+.slotGroup:last-child {
+  border-bottom: none;
+}
+
+.slotGroupKey {
+  padding: 8px 14px 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-hover);
+  background: rgba(99, 102, 241, 0.04);
+  border-bottom: 1px solid var(--border);
+}
+
+.slotField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 24px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.slotField:last-child {
+  border-bottom: none;
+}
+
+.fieldName {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  min-width: 60px;
+  font-size: 11px;
+}
+
+.slotKey {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-hover);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.slotArrow {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.slotVal {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text);
+  flex: 1;
+  font-size: 12px;
+}
+
+.slotRank {
+  font-size: 10px;
+  color: var(--text-muted);
+  min-width: 24px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.dim {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+/* set members */
+.setMembers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px;
+}
+
+.setMember {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* sorted set score */
+.scoreChip {
+  margin-left: auto;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* --- controls --- */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.controlCard,
+.logCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controlTitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.cmdNote {
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.8;
+}
+
+.inputRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.input {
+  flex: 1;
+  min-width: 80px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: var(--accent);
+}
+
+.btn {
+  padding: 7px 14px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--accent-hover);
+}
+
+.logEmpty {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.logEntry {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  word-break: break-all;
+}
+
+.logEntry:last-child {
+  border-bottom: none;
+}
+
+.logNew {
+  color: var(--text);
+}
+
+/* --- TTL section --- */
+.ttlDemo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ttlKeys {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ttlKey {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ttlKeyTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.ttlBadge {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ttlBar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ttlBarInner {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.9s linear, background 0.5s;
+}
+
+/* --- concept grid --- */
+.conceptGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.conceptCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.conceptCard h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-hover);
+  margin-bottom: 6px;
+}
+
+.conceptCard p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* --- system diagram --- */
+.diagramWrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.diagram {
+  width: 100%;
+  height: auto;
+}
+
+.diagramStep {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  min-height: 20px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.diagramBtns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btnGreen {
+  background: #10b981;
+}
+
+.btnGreen:hover {
+  background: #059669;
+}
+
+.btnRed {
+  background: #ef4444;
+}
+
+.btnRed:hover {
+  background: #dc2626;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- code block --- */
+.code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text);
+  overflow-x: auto;
+}
