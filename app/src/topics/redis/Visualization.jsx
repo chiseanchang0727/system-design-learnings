@@ -46,9 +46,9 @@ export default function RedisViz() {
   // Sorted Set
   const [zsetStore, setZsetStore] = useState({
     'leaderboard': [
-      { member: 'alice', score: 1500 },
-      { member: 'bob', score: 1200 },
       { member: 'charlie', score: 900 },
+      { member: 'bob', score: 1200 },
+      { member: 'alice', score: 1500 },
     ],
   })
   const [zKey, setZKey] = useState('')
@@ -120,12 +120,84 @@ export default function RedisViz() {
     return null
   }
 
+  // Skip List
+  const MAX_SL = 4
+  const [skipNodes, setSkipNodes] = useState([
+    { score: 100, member: 'tom',     height: 1 },
+    { score: 300, member: 'charlie', height: 3 },
+    { score: 500, member: 'sam',     height: 2 },
+    { score: 700, member: 'bob',     height: 4 },
+    { score: 900, member: 'alice',   height: 2 },
+  ])
+  const [slMember, setSlMember] = useState('')
+  const [slScore,  setSlScore]  = useState('')
+  const [slTarget, setSlTarget] = useState('')
+  const [slSteps,  setSlSteps]  = useState([])
+  const [slIdx,    setSlIdx]    = useState(-1)
+  const [slRunning, setSlRunning] = useState(false)
+  const [slLog,    setSlLog]    = useState([])
+
   // TTL
   const [ttlStore, setTtlStore] = useState({})
   const [ttlKey, setTtlKey] = useState('')
   const [ttlVal, setTtlVal] = useState('')
   const [ttlSecs, setTtlSecs] = useState('')
   const [tick, setTick] = useState(0)
+
+  // Skip list search auto-advance
+  useEffect(() => {
+    if (!slRunning) return
+    if (slIdx >= slSteps.length - 1) { setSlRunning(false); return }
+    const t = setTimeout(() => setSlIdx(i => i + 1), 750)
+    return () => clearTimeout(t)
+  }, [slRunning, slIdx, slSteps])
+
+  const slRandHeight = () => {
+    let h = 1
+    while (h < MAX_SL && Math.random() < 0.5) h++
+    return h
+  }
+
+  const handleSlAdd = () => {
+    const score = parseFloat(slScore); const m = slMember.trim()
+    if (isNaN(score) || !m) { setSlLog(p => ['ADD: member and score required', ...p].slice(0, 10)); return }
+    setSkipNodes(prev => {
+      const arr = prev.filter(n => n.member !== m)
+      arr.push({ score, member: m, height: slRandHeight() })
+      arr.sort((a, b) => a.score - b.score)
+      return arr
+    })
+    setSlLog(p => [`INSERT "${m}" score=${score}`, ...p].slice(0, 10))
+    setSlMember(''); setSlScore('')
+    setSlSteps([]); setSlIdx(-1); setSlRunning(false)
+  }
+
+  const computeSlSteps = (nodes, target) => {
+    const steps = []
+    if (!nodes.length) return steps
+    const maxH = Math.max(...nodes.map(n => n.height))
+    let cur = -1  // -1 = head sentinel
+    for (let lv = maxH - 1; lv >= 0; lv--) {
+      steps.push({ cur, lv, action: 'at' })
+      while (true) {
+        const nxt = nodes.findIndex((n, i) => i > cur && n.height > lv)
+        if (nxt === -1 || nodes[nxt].score > target) break
+        cur = nxt
+        steps.push({ cur, lv, action: 'move' })
+      }
+    }
+    const found = cur >= 0 && nodes[cur].score === target
+    steps.push({ cur, lv: 0, action: found ? 'found' : 'notfound' })
+    return steps
+  }
+
+  const handleSlSearch = () => {
+    const t = parseFloat(slTarget)
+    if (isNaN(t)) { setSlLog(p => ['SEARCH: enter a valid score', ...p].slice(0, 10)); return }
+    const steps = computeSlSteps(skipNodes, t)
+    setSlSteps(steps); setSlIdx(0); setSlRunning(true)
+    setSlLog(p => [`SEARCH ${t}`, ...p].slice(0, 10))
+  }
 
   const addLog = msg => setLog(prev => [msg, ...prev].slice(0, 15))
 
@@ -260,7 +332,8 @@ export default function RedisViz() {
   // Sorted Set handlers
   const handleZAdd = () => {
     const k = zKey.trim(); const score = parseFloat(zScore); const m = zMember.trim()
-    if (!k || isNaN(score) || !m) return
+    if (!k || !m) { addLog('ZADD: key and member are required'); return }
+    if (isNaN(score)) { addLog(`ZADD: score must be a number (got "${zScore.trim()}")`); return }
     setZsetStore(prev => {
       const arr = [...(prev[k] ?? [])]
       const idx = arr.findIndex(e => e.member === m)
@@ -283,8 +356,9 @@ export default function RedisViz() {
     const k = zRankKey.trim(); const m = zRankMember.trim()
     if (!k || !m) return
     const arr = zsetStore[k] ?? []
-    const rank = arr.findIndex(e => e.member === m)
-    addLog(`ZRANK "${k}" "${m}"  →  ${rank === -1 ? '(nil)' : rank}`)
+    const ascRank = arr.findIndex(e => e.member === m)
+    const revRank = ascRank === -1 ? -1 : arr.length - 1 - ascRank
+    addLog(`ZREVRANK "${k}" "${m}"  →  ${revRank === -1 ? '(nil)' : revRank}`)
     setZRankMember('')
   }
 
@@ -466,7 +540,7 @@ export default function RedisViz() {
             {activeType === 'zset' && storeItems.map(([k, arr]) => (
               <div key={k} className={styles.slotGroup}>
                 <div className={styles.slotGroupKey}>{k}</div>
-                {arr.map((e, i) => (
+                {[...arr].reverse().map((e, i) => (
                   <div key={e.member} className={styles.slotField}>
                     <span className={styles.slotRank}>#{i + 1}</span>
                     <span className={styles.slotKey}>{e.member}</span>
@@ -586,11 +660,11 @@ export default function RedisViz() {
 
           {activeType === 'zset' && <>
             <div className={styles.controlCard}>
-              <h3 className={styles.controlTitle}>ZADD key score member</h3>
+              <h3 className={styles.controlTitle}>ZADD key member score</h3>
               <div className={styles.inputRow}>
                 <input className={styles.input} placeholder="key" value={zKey} onChange={e => setZKey(e.target.value)} />
-                <input className={styles.input} placeholder="score" value={zScore} onChange={e => setZScore(e.target.value)} style={{ maxWidth: 80 }} />
-                <input className={styles.input} placeholder="member" value={zMember} onChange={e => setZMember(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleZAdd()} />
+                <input className={styles.input} placeholder="member (name)" value={zMember} onChange={e => setZMember(e.target.value)} />
+                <input className={styles.input} placeholder="score (number)" value={zScore} onChange={e => setZScore(e.target.value)} style={{ maxWidth: 120 }} onKeyDown={e => e.key === 'Enter' && handleZAdd()} />
                 <button className={styles.btn} onClick={handleZAdd}>ZADD</button>
               </div>
             </div>
@@ -602,11 +676,11 @@ export default function RedisViz() {
               </div>
             </div>
             <div className={styles.controlCard}>
-              <h3 className={styles.controlTitle}>ZRANK key member <span className={styles.cmdNote}>0-indexed rank</span></h3>
+              <h3 className={styles.controlTitle}>ZREVRANK key member <span className={styles.cmdNote}>0 = highest score</span></h3>
               <div className={styles.inputRow}>
                 <input className={styles.input} placeholder="key" value={zRankKey} onChange={e => setZRankKey(e.target.value)} />
                 <input className={styles.input} placeholder="member" value={zRankMember} onChange={e => setZRankMember(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleZRank()} />
-                <button className={styles.btn} onClick={handleZRank}>ZRANK</button>
+                <button className={styles.btn} onClick={handleZRank}>ZREVRANK</button>
               </div>
             </div>
           </>}
@@ -663,6 +737,145 @@ export default function RedisViz() {
           </div>
         </div>
       </section>
+
+      {/* Skip List */}
+      {(() => {
+        const SL_SP = 115, SL_HX = 55, SL_NW = 80, SL_NH = 34, SL_LH = 58
+        const SL_SH = MAX_SL * SL_LH + 36
+        const slNX = i => SL_HX + SL_SP * (i + 1)
+        const slLY = l => SL_SH - 20 - l * SL_LH
+        const slSvgW = Math.max(560, SL_HX + (skipNodes.length + 1) * SL_SP + 70)
+        const slStep = slSteps[slIdx] ?? null
+        const isAt = (i, l) => slStep?.cur === i && slStep?.lv === l
+        const maxH = skipNodes.length ? Math.max(...skipNodes.map(n => n.height)) : 1
+        const lastAction = slSteps[slSteps.length - 1]?.action
+
+        return (
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>How Sorted Sets Work Internally: Skip List</h2>
+            <p className={styles.sectionDesc}>
+              Redis uses a skip list to keep Sorted Set members ordered. It layers multiple linked lists on top of each other —
+              higher levels act as express lanes so search jumps in O(log N) instead of scanning every node.
+              Each node gets a random height on insert (coin-flip per level).
+            </p>
+
+            <div className={styles.skipWrap}>
+              <div className={styles.skipSvgScroll}>
+                <svg viewBox={`0 0 ${slSvgW} ${SL_SH}`} style={{ width: slSvgW, height: SL_SH }}>
+                  <defs>
+                    <marker id="sl-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+                      <path d="M0,0 L10,5 L0,10 z" fill="#4a4a6a" />
+                    </marker>
+                  </defs>
+
+                  {/* Level labels + grid */}
+                  {Array.from({ length: MAX_SL }, (_, l) => (
+                    <g key={l}>
+                      <text x={14} y={slLY(l) + 4} fontSize={11} fill="#555" fontFamily="monospace">L{l}</text>
+                      <line x1={32} y1={slLY(l)} x2={slSvgW - 10} y2={slLY(l)} stroke="#252535" strokeWidth={1} strokeDasharray="4 4" />
+                    </g>
+                  ))}
+
+                  {/* Head sentinel */}
+                  <line x1={SL_HX} y1={slLY(0)} x2={SL_HX} y2={slLY(maxH - 1)} stroke="#4a4a6a" strokeWidth={2} />
+                  {Array.from({ length: maxH }, (_, l) => {
+                    const active = slStep?.cur === -1 && slStep?.lv === l
+                    return (
+                      <g key={l}>
+                        <rect x={SL_HX - 22} y={slLY(l) - SL_NH / 2} width={44} height={SL_NH} rx={5}
+                          fill={active ? 'rgba(99,102,241,0.15)' : 'var(--surface)'}
+                          stroke={active ? '#6366f1' : '#3a3a5a'} strokeWidth={active ? 2 : 1} />
+                        <text x={SL_HX} y={slLY(l) + 4} textAnchor="middle" fontSize={10} fill="#555" fontFamily="monospace">HEAD</text>
+                      </g>
+                    )
+                  })}
+
+                  {/* Horizontal connections at each level */}
+                  {Array.from({ length: MAX_SL }, (_, l) => {
+                    const visible = skipNodes.reduce((acc, n, i) => { if (n.height > l) acc.push(i); return acc }, [])
+                    const all = [-1, ...visible]
+                    return all.slice(0, -1).map((fromIdx, k) => {
+                      const toIdx = all[k + 1]
+                      const x1 = fromIdx === -1 ? SL_HX + 22 : slNX(fromIdx) + SL_NW / 2
+                      const x2 = slNX(toIdx) - SL_NW / 2
+                      return x2 > x1 ? (
+                        <line key={`c${l}-${k}`} x1={x1} y1={slLY(l)} x2={x2} y2={slLY(l)}
+                          stroke="#4a4a6a" strokeWidth={1} markerEnd="url(#sl-arr)" />
+                      ) : null
+                    })
+                  })}
+
+                  {/* Nodes */}
+                  {skipNodes.map((node, i) => (
+                    <g key={node.member}>
+                      {/* Vertical connector */}
+                      <line x1={slNX(i)} y1={slLY(0)} x2={slNX(i)} y2={slLY(node.height - 1)}
+                        stroke="#3a3a5a" strokeWidth={2} />
+                      {/* Rect at each level */}
+                      {Array.from({ length: node.height }, (_, l) => {
+                        const active = isAt(i, l)
+                        const isFound  = active && slStep?.action === 'found'
+                        const isMissed = slStep?.action === 'notfound' && slStep?.cur === i && l === 0
+                        const border = isFound ? '#10b981' : isMissed ? '#ef4444' : active ? '#6366f1' : '#3a3a5a'
+                        const bg = isFound ? 'rgba(16,185,129,0.12)' : isMissed ? 'rgba(239,68,68,0.12)' : active ? 'rgba(99,102,241,0.15)' : 'var(--surface)'
+                        return (
+                          <g key={l}>
+                            <rect x={slNX(i) - SL_NW / 2} y={slLY(l) - SL_NH / 2} width={SL_NW} height={SL_NH} rx={6}
+                              fill={bg} stroke={border} strokeWidth={active ? 2 : 1} />
+                            <text x={slNX(i)} y={slLY(l) - 3} textAnchor="middle" fontSize={11} fontWeight="600" fill="var(--text)">{node.member}</text>
+                            <text x={slNX(i)} y={slLY(l) + 11} textAnchor="middle" fontSize={9} fill="var(--text-muted)">{node.score}</text>
+                          </g>
+                        )
+                      })}
+                    </g>
+                  ))}
+
+                  {/* Search result label */}
+                  {lastAction === 'found' && slIdx === slSteps.length - 1 && slStep?.cur >= 0 && (
+                    <text x={slNX(slStep.cur)} y={slLY(0) + SL_NH / 2 + 16} textAnchor="middle" fontSize={11} fontWeight="700" fill="#10b981">FOUND ✓</text>
+                  )}
+                  {lastAction === 'notfound' && slIdx === slSteps.length - 1 && (
+                    <text x={slSvgW / 2} y={SL_SH - 4} textAnchor="middle" fontSize={11} fontWeight="700" fill="#ef4444">NOT FOUND ✗</text>
+                  )}
+                </svg>
+              </div>
+
+              {/* Step description */}
+              <div className={styles.slStepDesc}>
+                {slStep === null && 'Add nodes or run a search to animate the skip list traversal'}
+                {slStep?.action === 'at'       && `Level ${slStep.lv}: check right from ${slStep.cur === -1 ? 'HEAD' : `"${skipNodes[slStep.cur]?.member}"`}`}
+                {slStep?.action === 'move'     && `Level ${slStep.lv}: jump right → "${skipNodes[slStep.cur]?.member}" (score ${skipNodes[slStep.cur]?.score})`}
+                {slStep?.action === 'found'    && `Found! "${skipNodes[slStep.cur]?.member}" at score ${skipNodes[slStep.cur]?.score}`}
+                {slStep?.action === 'notfound' && 'Not found — no node with that score'}
+              </div>
+
+              <div className={styles.skipControls}>
+                <div className={styles.controlCard}>
+                  <h3 className={styles.controlTitle}>Insert node</h3>
+                  <div className={styles.inputRow}>
+                    <input className={styles.input} placeholder="member" value={slMember} onChange={e => setSlMember(e.target.value)} />
+                    <input className={styles.input} placeholder="score" value={slScore} onChange={e => setSlScore(e.target.value)} style={{ maxWidth: 100 }} onKeyDown={e => e.key === 'Enter' && handleSlAdd()} />
+                    <button className={styles.btn} onClick={handleSlAdd}>INSERT</button>
+                  </div>
+                  <p className={styles.sectionDesc} style={{ marginTop: 4 }}>Height is assigned randomly (coin-flip per level, max {MAX_SL}).</p>
+                </div>
+                <div className={styles.controlCard}>
+                  <h3 className={styles.controlTitle}>Search by score</h3>
+                  <div className={styles.inputRow}>
+                    <input className={styles.input} placeholder="score to find" value={slTarget} onChange={e => setSlTarget(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSlSearch()} />
+                    <button className={styles.btn} onClick={handleSlSearch} disabled={slRunning}>SEARCH</button>
+                  </div>
+                </div>
+                <div className={styles.logCard}>
+                  <h3 className={styles.controlTitle}>Log</h3>
+                  {slLog.length === 0 && <p className={styles.logEmpty}>No operations yet</p>}
+                  {slLog.map((e, i) => <div key={i} className={`${styles.logEntry} ${i === 0 ? styles.logNew : ''}`}>{e}</div>)}
+                </div>
+              </div>
+            </div>
+          </section>
+        )
+      })()}
 
       {/* Python reference */}
       <section className={styles.section}>

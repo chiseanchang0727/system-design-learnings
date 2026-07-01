@@ -459,6 +459,39 @@
   cursor: not-allowed;
 }
 
+/* --- skip list --- */
+.skipWrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skipSvgScroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  padding: 8px 4px;
+}
+
+.slStepDesc {
+  text-align: center;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  min-height: 20px;
+}
+
+.skipControls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 /* --- code block --- */
 .code {
   background: var(--surface);
