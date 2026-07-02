@@ -82,7 +82,38 @@ export default function CachingViz() {
   return (
     <div className={styles.root}>
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>LRU Cache — Interactive Demo</h2>
+        <h2 className={styles.sectionTitle}>LRU Cache — Least Recently Used</h2>
+        <p className={styles.sectionDesc}>
+          LRU is a cache eviction policy. When the cache is full and a new item arrives, it evicts the item that
+          <strong> hasn't been accessed for the longest time</strong> — the assumption being: if you haven't used
+          something recently, you probably don't need it soon.
+        </p>
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>How to use</h2>
+        <div className={styles.conceptGrid}>
+          <div className={styles.conceptCard}>
+            <h3>PUT a value</h3>
+            <p>Type a key and value, then click PUT. The entry appears at the top (MRU position). If the key already exists, its value is updated and it moves to the top.</p>
+          </div>
+          <div className={styles.conceptCard}>
+            <h3>GET a value</h3>
+            <p>Type a key and click GET. On a hit, the entry moves to the top — it's now the most recently used. On a miss, the log shows MISS and nothing changes.</p>
+          </div>
+          <div className={styles.conceptCard}>
+            <h3>Watch eviction</h3>
+            <p>Fill the cache to capacity ({CAPACITY}), then PUT a new key. The bottom entry (LRU) is evicted automatically to make room — watch it flash red.</p>
+          </div>
+          <div className={styles.conceptCard}>
+            <h3>Read the order</h3>
+            <p>The list is ordered MRU → LRU top to bottom. The top entry was accessed most recently. The bottom entry will be evicted next if the cache fills up.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Interactive Demo</h2>
         <p className={styles.sectionDesc}>
           Capacity: <strong>{CAPACITY}</strong>. Most-recently-used is at the top. When full, the least-recently-used entry is evicted.
         </p>
