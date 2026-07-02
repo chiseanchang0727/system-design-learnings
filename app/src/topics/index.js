@@ -1,4 +1,5 @@
 import CachingViz from './caching/Visualization.jsx'
+import CaseStudies from './caching/CaseStudies.jsx'
 import ConsistentHashingViz from './consistent-hashing/Visualization.jsx'
 import RedisViz from './redis/Visualization.jsx'
 import BTreeViz from './b-tree/Visualization.jsx'
@@ -14,8 +15,11 @@ export const topicGroups = [
         slug: 'caching',
         title: 'Caching',
         icon: '⚡',
-        description: 'LRU, LFU, write-through, write-back, eviction policies',
-        component: CachingViz,
+        description: 'LRU eviction, write policies, and real-world cache architecture',
+        subtopics: [
+          { slug: 'lru-cache',     title: 'LRU Cache',     component: CachingViz },
+          { slug: 'case-studies',  title: 'Case Studies',  component: CaseStudies },
+        ],
       },
       {
         slug: 'redis',
@@ -24,6 +28,11 @@ export const topicGroups = [
         description: 'Strings, Hashes, Lists, Sets, Sorted Sets, TTL — the data types behind every Redis use case',
         component: RedisViz,
       },
+    ],
+  },
+  {
+    title: 'Distributed Systems',
+    topics: [
       {
         slug: 'consistent-hashing',
         title: 'Consistent Hashing',
@@ -68,4 +77,6 @@ export const topicGroups = [
   },
 ]
 
-export const topics = topicGroups.flatMap(g => g.topics)
+export const topics = topicGroups.flatMap(g =>
+  g.topics.flatMap(t => t.subtopics ? t.subtopics.map(s => ({ ...s, parentSlug: t.slug })) : [t])
+)

@@ -32,3 +32,30 @@
   color: var(--text-muted);
   font-size: 15px;
 }
+
+.subNav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.subNavLink {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.subNavLink:hover {
+  color: var(--text);
+}
+
+.subNavActive {
+  color: var(--accent-hover);
+  border-bottom-color: var(--accent);
+}

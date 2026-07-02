@@ -17,10 +17,19 @@ export default function Home() {
           <h2 className={styles.groupTitle}>{group.title}</h2>
           <div className={styles.grid}>
             {group.topics.map(topic => (
-              <Link key={topic.slug} to={`/topics/${topic.slug}`} className={styles.card}>
+              <Link
+                key={topic.slug}
+                to={topic.subtopics ? `/topics/${topic.slug}/${topic.subtopics[0].slug}` : `/topics/${topic.slug}`}
+                className={styles.card}
+              >
                 <span className={styles.cardIcon}>{topic.icon}</span>
                 <h3 className={styles.cardTitle}>{topic.title}</h3>
                 <p className={styles.cardDesc}>{topic.description}</p>
+                {topic.subtopics && (
+                  <div className={styles.subLinks}>
+                    {topic.subtopics.map(s => <span key={s.slug} className={styles.subLink}>{s.title}</span>)}
+                  </div>
+                )}
               </Link>
             ))}
           </div>

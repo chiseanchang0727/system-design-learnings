@@ -24,6 +24,11 @@
   padding: 0 20px 20px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 16px;
+  transition: opacity 0.15s;
+}
+
+.brand:hover {
+  opacity: 0.8;
 }
 
 .brandIcon {
@@ -43,7 +48,7 @@
   padding: 0 8px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 16px;
 }
 
 .navSection {
@@ -52,9 +57,19 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-muted);
-  padding: 12px 12px 4px;
+  padding: 0 12px 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
 }
 
+.groupList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Regular topic link */
 .navLink {
   display: flex;
   align-items: center;
@@ -77,7 +92,48 @@
 }
 
 .topicIcon {
-  font-size: 15px;
+  font-size: 14px;
+}
+
+/* Parent topic (has subtopics — not clickable) */
+.navParent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Subtopic list */
+.subtopicList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-left: 16px;
+}
+
+.subLink {
+  display: block;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.subLink:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.subLink.active {
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--accent-hover);
+  border-left-color: var(--accent);
 }
 
 .main {
