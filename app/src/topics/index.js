@@ -1,5 +1,6 @@
 import CachingViz from './caching/Visualization.jsx'
 import CaseStudies from './caching/CaseStudies.jsx'
+import InterviewGuide from './caching/InterviewGuide.jsx'
 import ConsistentHashingViz from './consistent-hashing/Visualization.jsx'
 import RedisViz from './redis/Visualization.jsx'
 import BTreeViz from './b-tree/Visualization.jsx'
@@ -17,8 +18,9 @@ export const topicGroups = [
         icon: '⚡',
         description: 'LRU eviction, write policies, and real-world cache architecture',
         subtopics: [
-          { slug: 'lru-cache',     title: 'LRU Cache',     component: CachingViz },
-          { slug: 'case-studies',  title: 'Case Studies',  component: CaseStudies },
+          { slug: 'lru-cache',       title: 'LRU Cache',       component: CachingViz },
+          { slug: 'case-studies',    title: 'Case Studies',    component: CaseStudies },
+          { slug: 'interview-guide', title: 'Interview Guide', component: InterviewGuide },
         ],
       },
       {
